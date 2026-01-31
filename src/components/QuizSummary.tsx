@@ -46,17 +46,22 @@ export function QuizSummary() {
       </div>
       <ol>
         {allQuestions.map((q, i) => {
+          let questionClass: string;
+
+          if (q.userAnswer === q.correctAnswer) {
+            questionClass = " correct";
+          } else if (q.userAnswer === "") {
+            questionClass = " skipped";
+          } else {
+            questionClass = " wrong";
+          }
+
           return (
             <li key={i}>
               <h3>{i + 1}</h3>
               <p className="question">{q.text}</p>
-              <p
-                className={
-                  "user-answer" +
-                  (q.correctAnswer === q.userAnswer ? " correct" : " wrong")
-                }
-              >
-                {q.userAnswer || "skipped question"}
+              <p className={"user-answer" + questionClass}>
+                {q.userAnswer || q.correctAnswer}
               </p>
             </li>
           );
