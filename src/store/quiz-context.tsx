@@ -32,28 +32,26 @@ type ActionType = {
 function questionReducer(state: StateType, action: ActionType) {
   const updatedState = { ...state };
 
+  const prevQuestionId = updatedState.allQuestions.findIndex(
+    (q) => q.id === updatedState.currentQuestion,
+  );
+
+  updatedState.allQuestions[prevQuestionId].userAnswer = action.payload;
+
   if (action.type === "CORRECT") {
     updatedState.correctAnswered++;
 
-    const prevQuestion = updatedState.allQuestions.findIndex(
-      (q) => q.id === updatedState.currentQuestion,
-    );
-
-    if (prevQuestion < updatedState.allQuestions.length - 1) {
+    if (prevQuestionId < updatedState.allQuestions.length - 1) {
       updatedState.currentQuestion =
-        updatedState.allQuestions[prevQuestion + 1].id;
+        updatedState.allQuestions[prevQuestionId + 1].id;
       return updatedState;
     } else {
       updatedState.currentQuestion = "completed";
     }
   } else if (action.type === "WRONG") {
-    const prevQuestion = updatedState.allQuestions.findIndex(
-      (q) => q.id === updatedState.currentQuestion,
-    );
-
-    if (prevQuestion < updatedState.allQuestions.length - 1) {
+    if (prevQuestionId < updatedState.allQuestions.length - 1) {
       updatedState.currentQuestion =
-        updatedState.allQuestions[prevQuestion + 1].id;
+        updatedState.allQuestions[prevQuestionId + 1].id;
       return updatedState;
     } else {
       updatedState.currentQuestion = "completed";
