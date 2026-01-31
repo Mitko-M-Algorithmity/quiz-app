@@ -17,6 +17,7 @@ type StateType = {
   currentQuestion: string;
   allQuestions: QuestionType[];
   correctAnswered: number;
+  skippedQuestions: number;
 };
 
 export const QuizContext = createContext({
@@ -40,22 +41,15 @@ function questionReducer(state: StateType, action: ActionType) {
 
   if (action.type === "CORRECT") {
     updatedState.correctAnswered++;
+  } else if (action.type === "EMPTY") {
+    updatedState.skippedQuestions++;
+  }
 
-    if (prevQuestionId < updatedState.allQuestions.length - 1) {
-      updatedState.currentQuestion =
-        updatedState.allQuestions[prevQuestionId + 1].id;
-      return updatedState;
-    } else {
-      updatedState.currentQuestion = "completed";
-    }
-  } else if (action.type === "WRONG") {
-    if (prevQuestionId < updatedState.allQuestions.length - 1) {
-      updatedState.currentQuestion =
-        updatedState.allQuestions[prevQuestionId + 1].id;
-      return updatedState;
-    } else {
-      updatedState.currentQuestion = "completed";
-    }
+  if (prevQuestionId < updatedState.allQuestions.length - 1) {
+    updatedState.currentQuestion =
+      updatedState.allQuestions[prevQuestionId + 1].id;
+  } else {
+    updatedState.currentQuestion = "completed";
   }
 
   return updatedState;
@@ -68,6 +62,7 @@ export function QuizContextWrapper({ children }: WrapperProps) {
       return { ...q, userAnswer: "" };
     }),
     correctAnswered: 0,
+    skippedQuestions: 0,
   });
 
   function handleCorrectAnswer(userAnswer: string) {
@@ -78,16 +73,22 @@ export function QuizContextWrapper({ children }: WrapperProps) {
     questionDispatcher({ type: "WRONG", payload: userAnswer });
   }
 
+  function handleEmptyAnswer() {
+    questionDispatcher({ type: "EMPTY", payload: "" });
+  }
+
   function handleAnsweringQuestion(
     correctAnswer: string,
     actualAnswer: string,
   ) {
     console.log(`correct -> ${correctAnswer} | actual -> ${actualAnswer}`);
 
-    if (correctAnswer !== actualAnswer) {
-      handleWrongAnswer(actualAnswer);
-    } else {
+    if (actualAnswer === "") {
+      handleEmptyAnswer();
+    } else if (correctAnswer === actualAnswer) {
       handleCorrectAnswer(actualAnswer);
+    } else {
+      handleWrongAnswer(actualAnswer);
     }
   }
 

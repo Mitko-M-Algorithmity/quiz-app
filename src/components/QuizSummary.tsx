@@ -13,7 +13,12 @@ export function QuizSummary() {
       <h2>Quiz Completed</h2>
       <div id="summary-stats">
         <div>
-          <p className="number">0%</p>
+          <p className="number">
+            {Math.round(
+              (quizState.skippedQuestions / allQuestions.length) * 100,
+            )}
+            %
+          </p>
           <p className="text">skipped</p>
         </div>
         <div>
@@ -28,7 +33,9 @@ export function QuizSummary() {
         <div>
           <p className="number">
             {Math.round(
-              ((allQuestions.length - quizState.correctAnswered) /
+              ((allQuestions.length -
+                quizState.correctAnswered -
+                quizState.skippedQuestions) /
                 allQuestions.length) *
                 100,
             )}
@@ -49,7 +56,7 @@ export function QuizSummary() {
                   (q.correctAnswer === q.userAnswer ? " correct" : " wrong")
                 }
               >
-                {q.userAnswer}
+                {q.userAnswer || "skipped question"}
               </p>
             </li>
           );
