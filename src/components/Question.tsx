@@ -71,6 +71,7 @@ export function Question() {
     }, ANSWER_TIMER);
   }
 
+  //Setting the rigth class string
   let buttonClass = "";
 
   switch (phase) {
