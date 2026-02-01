@@ -3,8 +3,8 @@ import { QuizContext } from "../store/quiz-context";
 import { useEffect } from "react";
 
 const QUESTION_TIMER = 10000;
-const ANSWER_TIMER = 2000;
-const POST_ANSWER_TIMER = 3000;
+const ANSWER_TIMER = 1000;
+const POST_ANSWER_TIMER = 2000;
 
 export function Question() {
   const quizContext = useContext(QuizContext);
