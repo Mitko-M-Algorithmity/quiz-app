@@ -21,7 +21,7 @@ export function Question() {
 
   //Interval used for the progress bar
   useEffect(() => {
-    let duration =
+    const duration =
       phase === "question"
         ? QUESTION_TIMER
         : phase === "selected"
@@ -36,7 +36,7 @@ export function Question() {
     }, 10);
 
     return () => clearInterval(interval);
-  }, [phase, currentQuestion!.id]);
+  }, [phase]);
 
   //Question timer
   useEffect(() => {
